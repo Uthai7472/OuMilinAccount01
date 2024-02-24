@@ -9,6 +9,7 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
     />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <style>
       * {
@@ -16,23 +17,33 @@
         padding: 0;
         box-sizing: border-box;
       }
+      .top-bar {
+        min-width: 50rem;
+      }
       .month-topic {
         width: 100%;
         height: auto;
         padding: 10px;
-        border: 1px solid black;
+       
         display: flex;
         justify-content: center;
         margin: 1rem;
         min-width: 50rem;
+        border-radius: 10px;
+        background-color: rgb(246, 193, 193);
+        color: rgb(250, 250, 250);
       }
       .note-container {
         width: 100%;
         height: auto;
-        border: 1px solid black;
+        border: 2px solid rgb(201, 233, 238); /* Set the border color and width */
+        box-shadow: 0 0 10px rgb(201, 233, 238); /* Add a glowing effect using box-shadow */
         margin: 1rem;
         padding: 1rem;
         min-width: 50rem;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: rgb(201, 233, 238);
       }
       .textarea {
         width: 90%;
@@ -53,7 +64,8 @@
       .table-header {
         width: 100%;
         height: auto;
-        border: 1px solid black;
+        background-color: rgb(246, 193, 193);
+        border-radius: 10px 10px 0 0;
         margin: 1rem 1rem 0 1rem;
         padding: 10px;
         display: flex;
@@ -101,7 +113,8 @@
       .table-input {
         width: 100%;
         height: 4rem;
-        border: 1px solid black;
+        background-color: rgb(255, 253, 226);
+        
         margin: 0 1rem 0 1rem;
         padding: 10px;
         display: flex;
@@ -141,7 +154,7 @@
         transform: translateX(-20px);
       }
       .table-input .col-5 {
-        width: 8rem;
+        width: 10rem;
         /* margin-left: 5px; */
         /* height: 1.8rem; */
         /* border: 1px solid red; */
@@ -155,6 +168,9 @@
         height: 100%;
         /* height: 3rem; */
         font-size: 14px;
+        background-color: rgb(233, 129, 150);
+        border: none;
+        border-radius: 20px;
         /* margin-bottom: 10px; */
         /* margin-bottom: 10px; */
       }
@@ -163,10 +179,12 @@
         padding-left: 10px;
         padding-right: 10px;
         border-radius: 5px;
+        color: rgb(127, 100, 184);
       }
       select {
         width: 100%;
         height: 100%;
+        color: rgb(127, 100, 184);
         background-color: rgb(254, 200, 216);
         border-radius: 5px;
         padding-left: 10px;
@@ -174,12 +192,15 @@
       }
       input[type="text"] {
         width: 100%;
+        color: rgb(127, 100, 184);
       }
 
       .table-sum {
         width: 100%;
         height: auto;
-        border: 1px solid black;
+        border-radius: 0 0 10px 10px;
+        background-color: rgb(194, 243, 159);
+        color: rgb(233, 129, 150);
         margin: 0 1rem 0 1rem;
         padding: 10px;
         display: flex;
@@ -191,14 +212,21 @@
       .table-history {
         width: 100%;
         height: auto;
-        border: 1px solid black;
         margin: 0 1rem 0 1rem;
+        border-bottom: 3px dotted rgb(233, 129, 150);
         padding: 10px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         min-width: 50rem;
+        background-color: (253, 244, 171);
       }
+      .btn.btn-danger {
+        background-color: rgb(219, 181, 247);
+        border-radius: 20px;
+        border: none;
+      }
+      
 
       @media screen and (max-width: 500px) {
         h5 {
@@ -300,9 +328,18 @@
         <div class="col-2">
           <select name="category" id="category">
             <option value="สำคัญ">สำคัญ</option>
-            <option value="ของกินเล่น">ของกินเล่น</option>
-            <option value="ของใช้ในบ้าน">ของใช้ในบ้าน</option>
+            <option value="ของใช้">ของใช้</option>
+            <option value="ข้างนอก">ข้างนอก</option>
+            <option value="ดีต่อใจ">ดีต่อใจ</option>
+            <option value="สุขภาพ">สุขภาพ</option>
             <option value="ทำกินเอง">ทำกินเอง</option>
+            <option value="ประกัน">ประกัน</option>
+            <option value="เติม/ถอน">เติม/ถอน</option>
+            <option value="มิลิน">มิลิน</option>
+            <option value="อู๋">อู๋</option>
+            <option value="ช้อปปิ้ง">ช้อปปิ้ง</option>
+            <option value="อื่นๆ">อื่นๆ</option>
+            <option value="กินเล่น">กินเล่น</option>
           </select>
         </div>
         <div class="col-3">
@@ -312,7 +349,7 @@
           <input type="number" name="price" id="price" required>
         </div>
         <div class="col-5">
-          <button type="submit" class="btn btn-primary">เพิ่มรายจ่าย</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-heart" style="color: rgb(49, 181, 189);"></i> เพิ่มรายจ่าย</button>
         </div>
       </div>
     </form>
@@ -352,7 +389,7 @@
             <h5><%= row.price %></h5>
           </div>
           <div class="col-5">
-            <a href="" class="btn btn-warning">เเก้ไข</a>
+            <!-- <a href="" class="btn btn-warning">เเก้ไข</a> -->
             <a href="/data_page/detail/delete?id=<%= row.id %>&month=<%= row.month %>" class="btn btn-danger">ลบ</a>
           </div>
         </div>

@@ -22,7 +22,8 @@
             width: 100%;
             height: auto;
             padding: 10px;
-            border: 1px solid black;
+            display: flex;
+            justify-content: center;
             margin: 0 10px 10px 10px;
             border-radius: 10px;
         }
@@ -68,15 +69,29 @@
             background-color: rgb(249, 250, 249);
             box-shadow: 10px 4px 8px #888888;
         }
+
+        .show-sum {
+            width: 100%;
+            height: auto;
+            padding: 5px;
+            margin-top: 10px;
+            background-color: rgb(249, 195, 210);
+            display: flex;
+            justify-content: center;
+        }
+
+        @media screen and (max-width: 825px) {
+            .show-sum h3 {
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
 
     <%- include('subview/header') %>
 
-    <!-- <div class="topic">
-        <h2>ดูกราฟเปรียบเทียบ</h2>
-    </div> -->
+    
 
     <div class="select-month">
         <div class="label">
@@ -96,8 +111,17 @@
         </form>
     </div>
 
+    <div class="topic">
+        <h2>เดือน <%= month %></h2>
+    </div>
+
     <div class="chart">
         <canvas id="myChart"></canvas>
+    </div>
+
+    <div class="show-sum">
+        <h3 style="display: inline;">รวม =</h3>
+        <h3 style="display: inline; padding-left: 5px;"><%= get_sum[0].sumPrice %> บาท</h3>
     </div>
 
     <script>

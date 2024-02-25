@@ -425,13 +425,25 @@ app.get('/dashboard', isAuthenticated, async (req, res) => {
                 }
             });
         });
+
+        const get_sum = await new Promise((resolve, reject) => {
+            connection.query(`
+                SELECT SUM(price) AS sumPrice FROM tb_account WHERE month = ?
+            `, [month], (err, results) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
         // console.log(get_datas.category)
         const categories = get_datas.map((row) => row.category);
         const prices = get_datas.map((row) => row.sumPrice);
 
         console.log(categories);
 
-        res.render('dashboard', {get_months, categories, prices});
+        res.render('dashboard', {get_months, categories, prices, get_sum, month});
 
     } catch (error) {
         console.error("Error : ", error);

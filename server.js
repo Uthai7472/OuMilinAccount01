@@ -259,7 +259,7 @@ app.get('/data_page/detail', isAuthenticated, async (req, res) => {
         const get_history = await new Promise((resolve, reject) => {
             connection.query(`
                 SELECT * FROM tb_account WHERE month = ?
-                ORDER BY date
+                ORDER BY date DESC
             `, [month_name], (err, results) => {
                 if (err) {
                     reject(err);

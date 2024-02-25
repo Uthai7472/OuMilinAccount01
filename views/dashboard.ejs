@@ -30,7 +30,7 @@
             width: 100%;
             height: auto;
             padding: 10px;
-            border: 1px solid black;
+            
             margin: 0 10px 0 10px;
             border-radius: 10px;
             background-color: rgba(254, 200, 216,0.4);
@@ -43,6 +43,16 @@
         }
         .form-control {
             margin-bottom: 10px;
+        }
+
+        .submit-btn {
+            width: 12rem;
+        }
+        .btn.btn-primary {
+            width: 100%;
+            border-radius: 20px;
+            border: none;
+            background-color: rgb(255, 172, 155);
         }
 
         .chart {
@@ -64,13 +74,13 @@
 
     <%- include('subview/header') %>
 
-    <div class="topic">
+    <!-- <div class="topic">
         <h2>ดูกราฟเปรียบเทียบ</h2>
-    </div>
+    </div> -->
 
     <div class="select-month">
         <div class="label">
-            <p>เลือกเดือนที่ต้องการ</ย>
+            <p>เลือกเดือนที่ต้องการ</p>
         </div>
         <form action="/dashboard/search" method="POST">
             <div class="select-box">
@@ -108,10 +118,11 @@
             datasets: [{
             label: 'ราคา',
             data: pricesArray,
-            backgroundColor: ['rgb(224, 187, 228)', 'rgb(149, 125, 173)', 
-            'rgb(210, 145, 188)', 'rgb(255, 223, 211)', 'rgb(238, 120, 153)',
+            backgroundColor: ['rgb(248, 194, 206)', 'rgb(253, 244, 171)', 
+            'rgb(194, 243, 159)', 'rgb(255, 223, 211)', 'rgb(238, 120, 153)',
             'rgb(235, 232, 190)', 'rgb(107, 149, 219)', 'rgb(107, 149, 219)',
-            'rgb(104, 68, 173)']
+            'rgb(104, 68, 173)', 'rgb(152, 222, 243)', 'rgb(252, 190, 171)',
+            'rgb(254, 237, 203)', 'rgb(252, 189, 166)']
             }]
         },
         options: {

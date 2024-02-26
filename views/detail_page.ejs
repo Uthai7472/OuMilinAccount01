@@ -112,7 +112,7 @@
 
       .table-input {
         width: 100%;
-        height: 4rem;
+        height: auto;
         background-color: rgb(255, 253, 226);
         
         margin: 0 1rem 0 1rem;
@@ -138,7 +138,7 @@
       }
       .table-input .col-3 {
         width: 15rem;
-        height: 1.8rem;
+        height: 6rem;
         /* border: 1px solid red; */
         padding-left: 10px;
         padding-right: 10px;
@@ -355,7 +355,8 @@
           </select>
         </div>
         <div class="col-3">
-          <input type="text" name="detail" id="detail" required>
+          <textarea name="detail" id="detail" required></textarea>
+          <!-- <input type="text" name="detail" id="detail" required> -->
         </div>
         <div class="col-4">
           <input type="number" name="price" id="price" required>
@@ -416,6 +417,15 @@
       editButton.addEventListener('click', function() {
         noteTextarea.readOnly = !noteTextarea.readOnly;
         noteTextarea.focus();
+      });
+
+      const textarea = document.getElementById('detail');
+
+      textarea.addEventListener('input', function() {
+        if (textarea.value.length > 200) {
+          textarea.value = textarea.value.slice(0, 200); // Truncate the text to 200 characters
+          // textarea.disabled = true; // Disable further typing
+        }
       });
     </script>
 

@@ -79,6 +79,16 @@ app.get('/', async (req, res) => {
             }
         });
         // await connection.query(`
+        //     ALTER TABLE tb_account MODIFY COLUMN detail VARCHAR(200);
+        // `, (err, results) => {
+        //     if (err) {
+        //         console.log(err);
+        //         res.send(err);
+        //     } else {
+        //         console.log('Successfully changed the data type of the detail column to VARCHAR(200)');
+        //     }
+        // });
+        // await connection.query(`
         //     ALTER TABLE tb_account ADD month VARCHAR(20);
         // `, (err, results) => {
         //     if (err) {

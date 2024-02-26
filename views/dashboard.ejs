@@ -10,6 +10,9 @@
     />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" 
+    integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <style>
         * {
@@ -128,11 +131,13 @@
         var categoriesArray = ('<%= categories %>').split(",").map(item => item.trim());
         var pricesArray = ('<%= prices %>').split(",").map(item => item.trim());
 
-        // Extract the sumPrice and category data from the results array
-        // const sumPrices = data.map(item => item.sumPrice);
-        // const categories = data.map(item => item.category);
+        var get_sum = <%= get_sum[0].sumPrice %>;
 
-        console.log(categoriesArray);
+        var dividedArray = pricesArray.map(function(price) {
+            return ((price * 100) / get_sum).toFixed(1) + '%';
+          });
+          
+        console.log(dividedArray);
 
         const ctx = document.getElementById('myChart').getContext('2d');
         new Chart(ctx, {
@@ -142,16 +147,50 @@
             datasets: [{
             label: 'ราคา',
             data: pricesArray,
-            backgroundColor: ['rgb(248, 194, 206)', 'rgb(253, 244, 171)', 
-            'rgb(194, 243, 159)', 'rgb(255, 223, 211)', 'rgb(238, 120, 153)',
-            'rgb(235, 232, 190)', 'rgb(107, 149, 219)', 'rgb(107, 149, 219)',
-            'rgb(104, 68, 173)', 'rgb(152, 222, 243)', 'rgb(252, 190, 171)',
-            'rgb(254, 237, 203)', 'rgb(252, 189, 166)']
-            }]
+            backgroundColor: ['rgb(240, 136, 136)', 'rgb(235, 161, 161)', 
+            'rgb(243, 182, 182)', 'rgb(245, 179, 215)', 'rgb(254, 197, 216)',
+            'rgb(176, 227, 246)', 'rgb(237, 241, 255)', 'rgb(182, 159, 213)',
+            'rgb(219, 194, 238)', 'rgb(244, 218, 249)', 'rgb(249, 215, 226)',
+            'rgb(255, 203, 165)', 'rgb(255, 222, 200)']
+            }] 
         },
         options: {
             
-        }
+        },
+        plugins: [{
+            beforeInit: function(chart) {
+                chart.data.datasets.forEach(function(dataset) {
+                    dataset.dividedArray = dividedArray;
+                });
+            },
+            afterDraw: function(chart) {
+                var ctx = chart.ctx;
+                chart.data.datasets.forEach(function(dataset, i) {
+                    var meta = chart.getDatasetMeta(i);
+                    if (!meta.hidden) {
+                        meta.data.forEach(function(element, index) {
+                            // Draw the text in black, with the specified font
+                            ctx.fillStyle = 'rgb(0, 0, 0)';
+                            var fontSize = 12;
+                            var fontStyle = 'normal';
+                            var fontFamily = 'Helvetica Neue';
+                            ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+                            // Just naively convert to string for now
+                            var dataString = dataset.dividedArray[index];
+
+                            // Make sure alignment settings are correct
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+
+                            var padding = 5;
+                            var position = element.tooltipPosition();
+                            ctx.fillText(dataString, position.x, position.y - (fontSize / 2) - padding);
+                        });
+                    }
+                });
+            }
+        }]
         });
       </script>
     

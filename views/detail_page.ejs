@@ -226,7 +226,16 @@
         border-radius: 20px;
         border: none;
       }
-      
+      .table-history .col-3 {
+        /* border: 1px solid red; */
+        width: 16rem;
+        height: auto;
+        display: flex;
+      }
+      /* .table-history .col-3 h5 {
+        
+      } */
+
       .btn.btn-success {
         border: none;
         border-radius: 20px;
@@ -422,6 +431,15 @@
       const textarea = document.getElementById('detail');
 
       textarea.addEventListener('input', function() {
+        const text = textarea.value;
+        let wrappedText = text;
+
+        if (text.length % 24 === 0) {
+          wrappedText = wrappedText + '\n';
+        }
+
+        textarea.value = wrappedText;
+
         if (textarea.value.length > 200) {
           textarea.value = textarea.value.slice(0, 200); // Truncate the text to 200 characters
           // textarea.disabled = true; // Disable further typing

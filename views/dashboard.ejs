@@ -118,8 +118,11 @@
         <h2>เดือน <%= month %></h2>
     </div>
 
-    <div class="chart">
+    <!-- <div class="chart">
         <canvas id="myChart"></canvas>
+    </div> -->
+    <div class="chart">
+        <canvas id="myChartBar"></canvas>
     </div>
 
     <div class="show-sum">
@@ -136,66 +139,88 @@
         var dividedArray = pricesArray.map(function(price) {
             return ((price * 100) / get_sum).toFixed(1) + '%';
           });
+
+        // Sort the categoriesArray and dividedArray in descending order
+        var sortedData = categoriesArray.map(function(_, index) {
+            return {
+            category: categoriesArray[index],
+            value: pricesArray[index]
+            };
+        }).sort(function(a, b) {
+            return parseFloat(b.value) - parseFloat(a.value);
+        });
+        
+        categoriesArray = sortedData.map(function(item) {
+            return item.category;
+        });
+        
+        pricesArray = sortedData.map(function(item) {
+            return item.value;
+        });
+
+        // Sort the categoriesArray and dividedArray in descending order
+        var sortedData1 = categoriesArray.map(function(_, index) {
+            return {
+            category: categoriesArray[index],
+            value: dividedArray[index]
+            };
+        }).sort(function(a, b) {
+            return parseFloat(b.value) - parseFloat(a.value);
+        });
+        
+        categoriesArray1 = sortedData1.map(function(item) {
+            return item.category;
+        });
+        
+        dividedArray = sortedData1.map(function(item) {
+            return item.value;
+        });
           
         console.log(dividedArray);
 
-        const ctx = document.getElementById('myChart').getContext('2d');
-        new Chart(ctx, {
-        type: 'pie',
-        data: {
+        var ctx2 = document.getElementById('myChartBar').getContext('2d');
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
             labels: categoriesArray,
             datasets: [{
-            label: 'ราคา',
-            data: pricesArray,
-            backgroundColor: ['rgb(240, 136, 136)', 'rgb(235, 161, 161)', 
-            'rgb(243, 182, 182)', 'rgb(245, 179, 215)', 'rgb(254, 197, 216)',
-            'rgb(176, 227, 246)', 'rgb(237, 241, 255)', 'rgb(182, 159, 213)',
-            'rgb(219, 194, 238)', 'rgb(244, 218, 249)', 'rgb(249, 215, 226)',
-            'rgb(255, 203, 165)', 'rgb(255, 222, 200)']
-            }] 
-        },
-        options: {
-            
-        },
-        plugins: [{
-            beforeInit: function(chart) {
-                chart.data.datasets.forEach(function(dataset) {
-                    dataset.dividedArray = dividedArray;
-                });
+                label: 'Percentage',
+                data: pricesArray,
+                backgroundColor: ['rgb(240, 136, 136)', 'rgb(235, 161, 161)', 
+                'rgb(243, 182, 182)', 'rgb(245, 179, 215)', 'rgb(254, 197, 216)',
+                'rgb(176, 227, 246)', 'rgb(237, 241, 255)', 'rgb(182, 159, 213)',
+                'rgb(219, 194, 238)', 'rgb(244, 218, 249)', 'rgb(249, 215, 226)',
+                'rgb(255, 203, 165)', 'rgb(255, 222, 200)'],
+                borderColor: ['rgb(240, 136, 136)', 'rgb(235, 161, 161)', 
+                'rgb(243, 182, 182)', 'rgb(245, 179, 215)', 'rgb(254, 197, 216)',
+                'rgb(176, 227, 246)', 'rgb(237, 241, 255)', 'rgb(182, 159, 213)',
+                'rgb(219, 194, 238)', 'rgb(244, 218, 249)', 'rgb(249, 215, 226)',
+                'rgb(255, 203, 165)', 'rgb(255, 222, 200)'],
+                borderWidth: 1
+            }]
             },
-            afterDraw: function(chart) {
-                var ctx = chart.ctx;
-                chart.data.datasets.forEach(function(dataset, i) {
-                    var meta = chart.getDatasetMeta(i);
-                    if (!meta.hidden) {
-                        meta.data.forEach(function(element, index) {
-                            // Draw the text in black, with the specified font
-                            ctx.fillStyle = 'rgb(0, 0, 0)';
-                            var fontSize = 12;
-                            var fontStyle = 'normal';
-                            var fontFamily = 'Helvetica Neue';
-                            ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
-
-                            // Rotate the context by 90 degrees counterclockwise
-                            ctx.save();
-                            ctx.translate(element.tooltipPosition().x, element.tooltipPosition().y);
-                            ctx.rotate(-0.5 * Math.PI);
-
-                            // Make sure alignment settings are correct
-                            ctx.textAlign = 'center';
-                            ctx.textBaseline = 'middle';
-
-                            var padding = 5;
-                            var position = { x: 0, y: 0 }; // Adjust this according to your preference
-                            ctx.fillText(dataset.dividedArray[index], position.x, position.y - (fontSize / 2) - padding);
-
-                            // Restore the context to its original state
-                            ctx.restore();
-                        });
+            options: {
+            scales: {
+                y: {
+                beginAtZero: true,
+                max: 4000,
+                ticks: {
+                    callback: function(value) {
+                    return value;
                     }
-                });
+                }
+                }
+            },
+            plugins: {
+                datalabels: {
+                    anchor: 'end',
+                    align: 'top',
+                    formatter: function(value, context) {
+                        return value + '%';
+                    }
+                }
             }
-        }]
+            }
         });
       </script>
     

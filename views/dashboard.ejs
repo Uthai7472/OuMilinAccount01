@@ -180,54 +180,74 @@
             return item.category;
         });
         
-        dividedArray = sortedData1.map(function(item) {
-            return item.value;
+        var dividedArray = pricesArray.map(function(price) {
+            return ((price * 100) / get_sum).toFixed(1);
         });
-          
+    
         console.log(dividedArray);
-
+    
         var ctx2 = document.getElementById('myChartBar').getContext('2d');
         new Chart(ctx2, {
             type: 'bar',
             data: {
-            labels: categoriesArray,
-            datasets: [{
-                label: 'Percentage',
-                data: pricesArray,
-                backgroundColor: ['rgb(240, 136, 136)', 'rgb(235, 161, 161)', 
-                'rgb(243, 182, 182)', 'rgb(245, 179, 215)', 'rgb(254, 197, 216)',
-                'rgb(176, 227, 246)', 'rgb(237, 241, 255)', 'rgb(182, 159, 213)',
-                'rgb(219, 194, 238)', 'rgb(244, 218, 249)', 'rgb(249, 215, 226)',
-                'rgb(255, 203, 165)', 'rgb(255, 222, 200)'],
-                borderColor: ['rgb(240, 136, 136)', 'rgb(235, 161, 161)', 
-                'rgb(243, 182, 182)', 'rgb(245, 179, 215)', 'rgb(254, 197, 216)',
-                'rgb(176, 227, 246)', 'rgb(237, 241, 255)', 'rgb(182, 159, 213)',
-                'rgb(219, 194, 238)', 'rgb(244, 218, 249)', 'rgb(249, 215, 226)',
-                'rgb(255, 203, 165)', 'rgb(255, 222, 200)'],
-                borderWidth: 1
-            }]
+                labels: categoriesArray,
+                datasets: [{
+                    label: 'Price',
+                    data: dividedArray,
+                    backgroundColor: ['rgb(240, 136, 136)', 'rgb(235, 161, 161)', 
+                        'rgb(243, 182, 182)', 'rgb(245, 179, 215)', 'rgb(254, 197, 216)',
+                        'rgb(176, 227, 246)', 'rgb(237, 241, 255)', 'rgb(182, 159, 213)',
+                        'rgb(219, 194, 238)', 'rgb(244, 218, 249)', 'rgb(249, 215, 226)',
+                        'rgb(255, 203, 165)', 'rgb(255, 222, 200)'],
+                    borderColor: ['rgb(240, 136, 136)', 'rgb(235, 161, 161)', 
+                        'rgb(243, 182, 182)', 'rgb(245, 179, 215)', 'rgb(254, 197, 216)',
+                        'rgb(176, 227, 246)', 'rgb(237, 241, 255)', 'rgb(182, 159, 213)',
+                        'rgb(219, 194, 238)', 'rgb(244, 218, 249)', 'rgb(249, 215, 226)',
+                        'rgb(255, 203, 165)', 'rgb(255, 222, 200)'],
+                    borderWidth: 1
+                }]
             },
             options: {
-            scales: {
-                y: {
-                beginAtZero: true,
-                max: 4000,
-                ticks: {
-                    callback: function(value) {
-                    return value;
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                var label = context.dataset.label || '';
+                                var price = parseFloat(pricesArray[context.dataIndex]).toFixed(2);
+                                return label + ': ' + price + ' บาท';
+                            }
+                        }
                     }
-                }
-                }
-            },
-            plugins: {
-                datalabels: {
-                    anchor: 'end',
-                    align: 'top',
-                    formatter: function(value, context) {
-                        return value + '%';
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100, // Set the maximum value of y-axis to 100%
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%'; // Append '%' symbol to tick labels
+                            }
+                        }
                     }
+                },
+            /* plugins: {
+                afterDraw: function(chart) {
+                    var ctx = chart.ctx;
+                    chart.data.datasets.forEach(function(dataset, i) {
+                        var meta = chart.getDatasetMeta(i);
+                        if (!meta.hidden) {
+                            meta.data.forEach(function(element, index) {
+                                // Draw the price value on top of each bar
+                                var price = parseFloat(pricesArray[index]).toFixed(2);
+                                ctx.fillStyle = 'black';
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'bottom';
+                                ctx.fillText(price, element._model.x, element._model.y - 5);
+                            });
+                        }
+                    });
                 }
-            }
+            } */
             }
         });
       </script>

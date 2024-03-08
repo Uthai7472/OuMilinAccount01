@@ -67,17 +67,17 @@ app.get('/', async (req, res) => {
                 console.log('CREATE TABLE tb_user success');
             }
         });
-        await connection.query(`
-            CREATE TABLE IF NOT EXISTS tb_account (id INT PRIMARY KEY AUTO_INCREMENT,
-                date DATE, category VARCHAR(30), detail VARCHAR(50), price INT, note VARCHAR(100))
-        `, (err, results) => {
-            if (err) {
-                console.log(err);
-                res.send(err);
-            } else {
-                console.log('CREATE TABLE tb_account success');
-            }
-        });
+        // await connection.query(`
+        //     CREATE TABLE IF NOT EXISTS tb_account (id INT PRIMARY KEY AUTO_INCREMENT,
+        //         date DATE, category VARCHAR(30), detail VARCHAR(50), price INT, note VARCHAR(100))
+        // `, (err, results) => {
+        //     if (err) {
+        //         console.log(err);
+        //         res.send(err);
+        //     } else {
+        //         console.log('CREATE TABLE tb_account success');
+        //     }
+        // });
         // await connection.query(`
         //     ALTER TABLE tb_account MODIFY COLUMN detail VARCHAR(200);
         // `, (err, results) => {
@@ -251,50 +251,98 @@ app.get('/data_page/delete_month', isAuthenticated, async (req, res) => {
 app.get('/data_page/detail', isAuthenticated, async (req, res) => {
     try {
         const month_name = req.query.month;
+        let category_filter = req.query.category;
         console.log(month_name);
 
-        const get_note = await new Promise((resolve, reject) => {
-            connection.query(`
-                SELECT note FROM tb_account WHERE month = ?
-            `, [month_name], (err, results) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(results);
-                }
+        if (!category_filter) {
+            category_filter = '';
+            const get_history = await new Promise((resolve, reject) => {
+                connection.query(`
+                    SELECT * FROM tb_account WHERE month = ?
+                    ORDER BY date DESC
+                `, [month_name], (err, results) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(results);
+                    }
+                });
             });
-        });
-        console.log("Note: ", get_note);
+            const get_sum = await new Promise((resolve, reject) => {
+                connection.query(`
+                    SELECT SUM(price) AS sumPrice FROM tb_account WHERE month = ?
+                `, [month_name], (err, results) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(results);
+                    }
+                });
+            });
+            const get_note = await new Promise((resolve, reject) => {
+                connection.query(`
+                    SELECT note FROM tb_account WHERE month = ?
+                `, [month_name], (err, results) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(results);
+                    }
+                });
+            });
+            console.log("Note: ", get_note);
 
-        const get_history = await new Promise((resolve, reject) => {
-            connection.query(`
-                SELECT * FROM tb_account WHERE month = ?
-                ORDER BY date DESC
-            `, [month_name], (err, results) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(results);
-                }
+            res.render('detail_page', {month_name, get_note, get_history, get_sum, category_filter:'ทั้งหมด'});
+        } else {
+            const get_history = await new Promise((resolve, reject) => {
+                connection.query(`
+                    SELECT * FROM tb_account WHERE month = ?
+                    AND category = ?
+                    ORDER BY date DESC
+                `, [month_name, category_filter], (err, results) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(results);
+                    }
+                });
             });
-        });
+            const get_sum = await new Promise((resolve, reject) => {
+                connection.query(`
+                    SELECT SUM(price) AS sumPrice FROM tb_account WHERE month = ?
+                    AND category = ?
+                `, [month_name, category_filter], (err, results) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(results);
+                    }
+                });
+            });
 
-        const get_sum = await new Promise((resolve, reject) => {
-            connection.query(`
-                SELECT SUM(price) AS sumPrice FROM tb_account WHERE month = ?
-            `, [month_name], (err, results) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(results);
-                }
+            const get_note = await new Promise((resolve, reject) => {
+                connection.query(`
+                    SELECT note FROM tb_account WHERE month = ?
+                `, [month_name], (err, results) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(results);
+                    }
+                });
             });
-        });
+            console.log("Note: ", get_note);
+
+            res.render('detail_page', {month_name, get_note, get_history, get_sum, category_filter});
+        }
+
+        
+        
         // console.log("Note: ", get_note);
         // console.log("GetHistory: ", get_history[1].date);
         // console.log("Get SUM: ", get_sum[0].sumPrice);
 
-        res.render('detail_page', {month_name, get_note, get_history, get_sum});
+        
 
     } catch (error) {
         console.error("Error : ", error);
@@ -400,6 +448,20 @@ app.get('/data_page/detail/delete', isAuthenticated, async (req, res) => {
         res.status(500);
     }
 });
+app.post('/data_page/filter/detail', async (req, res) => {
+    try {
+        const month = req.query.month;
+        const category_filter = req.body.category;
+
+        console.log(month, category_filter);
+
+        res.redirect(`/data_page/detail?month=${month}&category=${category_filter}`)
+
+    } catch (error) {
+        console.error("Error : ", error);
+        res.status(500);
+    }
+})
 
 
 app.get('/dashboard', isAuthenticated, async (req, res) => {

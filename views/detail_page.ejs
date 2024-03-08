@@ -209,6 +209,30 @@
         min-width: 50rem;
       }
 
+      .category-filter-form {
+        display: flex;
+
+        justify-content: flex-start;
+        /* border: 1px solid black; */
+        margin-top: 5px;
+        margin-left: 1rem;
+        width: 100%;
+      }
+
+      .category-filter-form .filter-dropdown {
+        width: 300px;
+      }
+
+      .category-filter-form .filter-btn-form .btn {
+        height: 100%;
+        width: 4rem;
+        margin-left: 1rem;
+        /* width: 100px;
+        height: 1rem; */
+        /* border: 1px solid red; */
+        background-color: rgb(233, 129, 150);
+      }
+
       .table-history {
         width: 100%;
         height: auto;
@@ -281,6 +305,38 @@
           transform: translateX(0.4rem);
           
         }
+
+        .category-filter-form {
+            /* position: fixed; */
+            display: flex;
+            flex-direction: column;
+            /* justify-content: flex-start; */
+            /* border: 1px solid black; */
+            margin-top: 5px;
+            margin-left: 1rem;
+            width: 100%;
+            height: 5rem;
+            padding: 0;
+        }
+        .category-filter-form .filter-dropdown {
+            width: 100%;
+            height: 50%;
+            margin-bottom: 5px;
+        }
+
+        .category-filter-form .filter-btn-form .btn {
+            height: 100%;
+            width: 100%;
+            margin-left: 0;
+            margin-bottom: 0;
+            /* transform: translateX(-1rem); */
+            /* position: relative; */
+            /* margin-left: 1rem; */
+            /* width: 100px;
+            height: 1rem; */
+            /* border: 1px solid red; */
+            background-color: rgb(233, 129, 150);
+        }
         
       }
 
@@ -291,6 +347,37 @@
         .table-input .col-5 {
           transform: translateX(0.4rem);
           
+        }
+        .category-filter-form {
+            /* position: fixed; */
+            display: flex;
+            flex-direction: column;
+            /* justify-content: flex-start; */
+            /* border: 1px solid black; */
+            margin-top: 5px;
+            margin-left: 1rem;
+            width: 100%;
+            height: 5rem;
+            padding: 0;
+        }
+        .category-filter-form .filter-dropdown {
+            width: 100%;
+            height: 50%;
+            margin-bottom: 5px;
+        }
+
+        .category-filter-form .filter-btn-form .btn {
+            height: 100%;
+            width: 100%;
+            margin-left: 0;
+            margin-bottom: 0;
+            /* transform: translateX(-1rem); */
+            /* position: relative; */
+            /* margin-left: 1rem; */
+            /* width: 100px;
+            height: 1rem; */
+            /* border: 1px solid red; */
+            background-color: rgb(233, 129, 150);
         }
       }
     </style>
@@ -393,6 +480,32 @@
         บาท
       </div>
     </div>
+        
+    <form action="/data_page/filter/detail?month=<%= month_name %>" method="POST">
+        <div class="category-filter-form">
+            <span class="filter-dropdown">
+                <select name="category" id="category">
+                    <option value="" <%= category_filter === "" ? 'selected' : '' %>>ทั้งหมด</option>
+                    <option value="สำคัญ" <%= category_filter === "สำคัญ" ? 'selected' : '' %>>สำคัญ</option>
+                    <option value="ของใช้" <%= category_filter === "ของใช้" ? 'selected' : '' %>>ของใช้</option>
+                    <option value="ข้างนอก" <%= category_filter === "ข้างนอก" ? 'selected' : '' %>>ข้างนอก</option>
+                    <option value="ดีต่อใจ" <%= category_filter === "ดีต่อใจ" ? 'selected' : '' %>>ดีต่อใจ</option>
+                    <option value="สุขภาพ" <%= category_filter === "สุขภาพ" ? 'selected' : '' %>>สุขภาพ</option>
+                    <option value="ทำกินเอง" <%= category_filter === "ทำกินเอง" ? 'selected' : '' %>>ทำกินเอง</option>
+                    <option value="ประกัน" <%= category_filter === "ประกัน" ? 'selected' : '' %>>ประกัน</option>
+                    <option value="เติม/ถอน" <%= category_filter === "เติม/ถอน" ? 'selected' : '' %>>เติม/ถอน</option>
+                    <option value="มิลิน" <%= category_filter === "มิลิน" ? 'selected' : '' %>>มิลิน</option>
+                    <option value="อู๋" <%= category_filter === "อู๋" ? 'selected' : '' %>>อู๋</option>
+                    <option value="ช้อปปิ้ง" <%= category_filter === "ช้อปปิ้ง" ? 'selected' : '' %>>ช้อปปิ้ง</option>
+                    <option value="อื่นๆ" <%= category_filter === "อื่นๆ" ? 'selected' : '' %>>อื่นๆ</option>
+                    <option value="กินเล่น" <%= category_filter === "กินเล่น" ? 'selected' : '' %>>กินเล่น</option>
+                </select>
+            </span>
+            <span class="filter-btn-form">
+                <button type="submit" class="btn">กรอง</button>
+            </span>
+        </div>
+    </form>
 
     
       <% get_history.forEach((row) => { %> 

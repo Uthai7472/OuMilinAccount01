@@ -10,6 +10,7 @@
     />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
     <style>
         * {
@@ -150,7 +151,15 @@
             }]
         },
         options: {
-            
+            plugins: {
+            datalabels: {
+                color: '#000', // Set the color of the data labels
+                formatter: (value, context) => {
+                // Display the value of each data point as the label
+                return value + ' บาท'; // Append ' บาท' to the value for the Thai Baht currency
+                }
+            }
+            }
         }
         });
       </script>

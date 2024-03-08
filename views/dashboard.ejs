@@ -10,7 +10,13 @@
     />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<<<<<<< HEAD
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+=======
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" 
+    integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+>>>>>>> a2acfe40959eced2af424ebddc36657004f1c971
 
     <style>
         * {
@@ -60,7 +66,7 @@
         .chart {
             margin-top: 10px;
             width: 100%;
-            height: 40rem;
+            height: 100%;
             padding: 10px;
             /* border: 3px solid black; */
             border-radius: 10px;
@@ -69,6 +75,10 @@
             align-items: center;
             background-color: rgb(249, 250, 249);
             box-shadow: 10px 4px 8px #888888;
+        }
+        #myChartBar {
+            width: 100%;
+            height: 200rem;
         }
 
         .show-sum {
@@ -84,6 +94,10 @@
         @media screen and (max-width: 825px) {
             .show-sum h3 {
                 font-size: 12px;
+            }
+
+            canvas {
+                font-size: 10px;
             }
         }
     </style>
@@ -116,8 +130,11 @@
         <h2>เดือน <%= month %></h2>
     </div>
 
-    <div class="chart">
+    <!-- <div class="chart">
         <canvas id="myChart"></canvas>
+    </div> -->
+    <div class="chart">
+        <canvas id="myChartBar"></canvas>
     </div>
 
     <div class="show-sum">
@@ -129,12 +146,13 @@
         var categoriesArray = ('<%= categories %>').split(",").map(item => item.trim());
         var pricesArray = ('<%= prices %>').split(",").map(item => item.trim());
 
-        // Extract the sumPrice and category data from the results array
-        // const sumPrices = data.map(item => item.sumPrice);
-        // const categories = data.map(item => item.category);
+        var get_sum = <%= get_sum[0].sumPrice %>;
 
-        console.log(categoriesArray);
+        var dividedArray = pricesArray.map(function(price) {
+            return ((price * 100) / get_sum).toFixed(1) + '%';
+          });
 
+<<<<<<< HEAD
         const ctx = document.getElementById('myChart').getContext('2d');
         new Chart(ctx, {
         type: 'pie',
@@ -161,6 +179,109 @@
             }
             }
         }
+=======
+        // Sort the categoriesArray and dividedArray in descending order
+        var sortedData = categoriesArray.map(function(_, index) {
+            return {
+            category: categoriesArray[index],
+            value: pricesArray[index]
+            };
+        }).sort(function(a, b) {
+            return parseFloat(b.value) - parseFloat(a.value);
+        });
+        
+        categoriesArray = sortedData.map(function(item) {
+            return item.category;
+        });
+        
+        pricesArray = sortedData.map(function(item) {
+            return item.value;
+        });
+
+        // Sort the categoriesArray and dividedArray in descending order
+        var sortedData1 = categoriesArray.map(function(_, index) {
+            return {
+            category: categoriesArray[index],
+            value: dividedArray[index]
+            };
+        }).sort(function(a, b) {
+            return parseFloat(b.value) - parseFloat(a.value);
+        });
+        
+        categoriesArray1 = sortedData1.map(function(item) {
+            return item.category;
+        });
+        
+        var dividedArray = pricesArray.map(function(price) {
+            return ((price * 100) / get_sum).toFixed(1);
+        });
+    
+        console.log(dividedArray);
+    
+        var ctx2 = document.getElementById('myChartBar').getContext('2d');
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: categoriesArray,
+                datasets: [{
+                    label: 'Price',
+                    data: dividedArray,
+                    backgroundColor: ['rgb(240, 136, 136)', 'rgb(235, 161, 161)', 
+                        'rgb(243, 182, 182)', 'rgb(245, 179, 215)', 'rgb(254, 197, 216)',
+                        'rgb(176, 227, 246)', 'rgb(237, 241, 255)', 'rgb(182, 159, 213)',
+                        'rgb(219, 194, 238)', 'rgb(244, 218, 249)', 'rgb(249, 215, 226)',
+                        'rgb(255, 203, 165)', 'rgb(255, 222, 200)'],
+                    borderColor: ['rgb(240, 136, 136)', 'rgb(235, 161, 161)', 
+                        'rgb(243, 182, 182)', 'rgb(245, 179, 215)', 'rgb(254, 197, 216)',
+                        'rgb(176, 227, 246)', 'rgb(237, 241, 255)', 'rgb(182, 159, 213)',
+                        'rgb(219, 194, 238)', 'rgb(244, 218, 249)', 'rgb(249, 215, 226)',
+                        'rgb(255, 203, 165)', 'rgb(255, 222, 200)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                var label = context.dataset.label || '';
+                                var price = parseFloat(pricesArray[context.dataIndex]).toFixed(2);
+                                return label + ': ' + price + ' บาท';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 35, // Set the maximum value of y-axis to 100%
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%'; // Append '%' symbol to tick labels
+                            }
+                        }
+                    }
+                },
+            /* plugins: {
+                afterDraw: function(chart) {
+                    var ctx = chart.ctx;
+                    chart.data.datasets.forEach(function(dataset, i) {
+                        var meta = chart.getDatasetMeta(i);
+                        if (!meta.hidden) {
+                            meta.data.forEach(function(element, index) {
+                                // Draw the price value on top of each bar
+                                var price = parseFloat(pricesArray[index]).toFixed(2);
+                                ctx.fillStyle = 'black';
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'bottom';
+                                ctx.fillText(price, element._model.x, element._model.y - 5);
+                            });
+                        }
+                    });
+                }
+            } */
+            }
+>>>>>>> a2acfe40959eced2af424ebddc36657004f1c971
         });
       </script>
     
